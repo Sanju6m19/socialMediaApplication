@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+    <div class="row">
+        {% for post in posts %}
+            <div>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <p class="card-subtitle mb-2 text-muted">Posted by {{ post.author.username }}</p>
+                        {% if post.content %}
+                            <p class="card-text">{{ post.content|truncatewords:20 }}</p>
+                        {% endif %}
+                        {% if post.media %}
+                            <img src="{{ post.media.url }}" class="img-fluid w-50 h-50 mb-4" alt="{{ post.title }}"><br>
+                        {% endif %}
+                        <button class="btn btn-primary" onclick="toggleLike({{ post.id }})">Like</button>
+                        <span id="like-count-{{ post.id }}">{{ post.total_likes }}</span>
+                        <a href="{% url 'post_detail' post.id %}" class="btn btn-secondary">View Comments</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

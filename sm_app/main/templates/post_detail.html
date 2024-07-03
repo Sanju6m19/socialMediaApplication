@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}{{ post.title }}{% endblock %}
+{% block content %}
+    <h2>{{ post.title }}</h2>
+    {% if post.content %}
+        <p>{{ post.content }}</p>
+    {% endif %}
+    {% if post.media %}
+        <img src="{{ post.media.url }}" class="img-fluid" alt="{{ post.title }}">
+    {% endif %}
+    <button class="btn btn-primary" onclick="toggleLike({{ post.id }})">Like</button>
+    <span id="like-count-{{ post.id }}">{{ post.total_likes }}</span>
+    <hr>
+    <h3>Comments</h3>
+    {% for comment in comments %}
+        <div>
+            <p>{{ comment.content }}</p>
+            <small>By {{ comment.author.username }} on {{ comment.date_posted }}</small>
+        </div>
+        <hr>
+    {% endfor %}
+    {% if user.is_authenticated %}
+        <h4>Add a Comment:</h4>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-primary">Add Comment</button>
+        </form>
+    {% else %}
+        <p>You need to <a href="{% url 'login' %}">login</a> to add a comment.</p>
+    {% endif %}
+{% endblock %}
